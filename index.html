@@ -3,270 +3,354 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Mercado Fácil PDV</title>
+    <title>PDV Mercado Fácil</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
-    <div class="app-shell">
-      <aside class="sidebar">
-        <div class="brand">
-          <div class="brand-mark">MF</div>
-          <div>
-            <strong>Mercado Fácil</strong>
-            <span>PDV Caixa</span>
+    <div class="pdv-container">
+      <!-- Tela Principal de Vendas -->
+      <div class="pdv-screen active" id="salesScreen">
+        <div class="pdv-header">
+          <div class="pdv-info">
+            <div class="store-info">
+              <span id="storeName" class="store-name">MERCADO FÁCIL</span>
+              <span id="operatorDisplay" class="operator">CAIXA 01</span>
+            </div>
+            <div class="datetime">
+              <span id="timeDisplay">00:00</span>
+              <span id="dateDisplay">00/00/0000</span>
+            </div>
           </div>
         </div>
 
-        <nav class="nav" aria-label="Principal">
-          <button class="nav-item active" data-view="cashier" title="Ctrl+1">Caixa</button>
-          <button class="nav-item" data-view="products" title="Ctrl+2">Produtos</button>
-          <button class="nav-item" data-view="sales" title="Ctrl+3">Vendas</button>
-          <button class="nav-item" data-view="reports" title="Ctrl+4">Resumo</button>
-          <button class="nav-item" data-view="settings" title="Ctrl+5">Config.</button>
-        </nav>
-
-        <div class="operator-card">
-          <span>Operador</span>
-          <strong id="operatorName">Caixa 01</strong>
-          <small id="sessionStatus">Sessão aberta</small>
-        </div>
-      </aside>
-
-      <main class="workspace">
-        <header class="topbar">
-          <div>
-            <p id="currentDate">Hoje</p>
-            <h1 id="viewTitle">Caixa</h1>
+        <div class="pdv-main">
+          <!-- Painel de Busca/Entrada -->
+          <div class="search-panel">
+            <input type="text" id="barcodeInput" class="barcode-input" placeholder="LEIA O CÓDIGO DE BARRAS OU DIGITE O SKU" autofocus>
+            <div class="quick-search">
+              <button type="button" class="search-btn" id="searchBtn">🔍 BUSCAR</button>
+              <button type="button" class="clear-btn" id="clearSearchBtn">LIMPAR</button>
+            </div>
           </div>
-          <div class="top-actions">
-            <button class="ghost-btn" id="newSaleBtn" type="button" title="Nova venda">Nova venda</button>
-            <button class="primary-btn" id="checkoutBtn" type="button" title="F4 - Receber">Receber</button>
-          </div>
-        </header>
 
-        <section class="view active" id="cashierView">
-          <div class="cashier-grid">
-            <section class="panel product-finder">
-              <div class="panel-heading">
-                <div>
-                  <span>Venda rápida</span>
-                  <h2>Adicionar produto</h2>
+          <!-- Tela de Carrinho -->
+          <div class="cart-display">
+            <div class="cart-header">
+              <span>ITEM</span>
+              <span>QTD</span>
+              <span>VUNIT</span>
+              <span>VTOTAL</span>
+              <span>DEL</span>
+            </div>
+            <div class="cart-items" id="cartItemsDisplay"></div>
+            <div class="cart-footer">
+              <div class="cart-stats">
+                <div class="stat">
+                  <span>ITENS:</span>
+                  <strong id="cartCount">0</strong>
                 </div>
-                <button class="icon-btn" id="focusSearchBtn" title="Focar busca (F2)" type="button">⌕</button>
-              </div>
-              <label class="field">
-                <span>Código, nome, categoria ou SKU (Enter para buscar por código)</span>
-                <input id="productSearch" autocomplete="off" placeholder="Ex.: arroz, 789100, hortifruti">
-              </label>
-              <div class="quick-cats" id="quickCategories"></div>
-              <div class="product-list" id="productList"></div>
-            </section>
-
-            <section class="panel cart-panel">
-              <div class="panel-heading">
-                <div>
-                  <span>Venda em andamento</span>
-                  <h2>Carrinho</h2>
+                <div class="stat">
+                  <span>SUBTOTAL:</span>
+                  <strong id="cartSubtotal">R$ 0,00</strong>
                 </div>
-                <button class="danger-btn small" id="clearCartBtn" type="button">Limpar</button>
               </div>
-              <div class="cart-list" id="cartList"></div>
-              <div class="totals-box">
-                <label class="inline-field">
-                  <span>Desconto (R$)</span>
-                  <input id="discountInput" type="number" min="0" step="0.01" value="0">
-                </label>
-                <label class="inline-field">
-                  <span>Acréscimo (R$)</span>
-                  <input id="surchargeInput" type="number" min="0" step="0.01" value="0">
-                </label>
-                <div class="total-row"><span>Subtotal</span><strong id="subtotalValue">R$ 0,00</strong></div>
-                <div class="total-row"><span>Desconto</span><strong id="discountValue">R$ 0,00</strong></div>
-                <div class="total-row"><span>Acréscimo</span><strong id="surchargeValue">R$ 0,00</strong></div>
-                <div class="total-row highlight"><span>Total</span><strong id="totalValue">R$ 0,00</strong></div>
-              </div>
-            </section>
+            </div>
           </div>
-        </section>
+        </div>
 
-        <section class="view" id="productsView">
-          <section class="panel">
-            <div class="panel-heading">
-              <div>
-                <span>Cadastro</span>
-                <h2>Produtos</h2>
-              </div>
-              <div class="sort-filter">
-                <select id="productSortSelect" class="sort-select">
-                  <option value="name">Ordenar por Nome</option>
-                  <option value="price">Ordenar por Preço</option>
-                  <option value="stock">Ordenar por Estoque</option>
-                  <option value="category">Ordenar por Categoria</option>
-                </select>
-                <button class="ghost-btn small" id="productFilterBtn" type="button">Filtrar Estoque</button>
-                <button class="ghost-btn small" id="exportProductsBtn" type="button">Exportar CSV</button>
-              </div>
-            </div>
-            <form class="product-form" id="productForm">
-              <input type="hidden" id="productId">
-              <label class="field"><span>Nome</span><input id="nameInput" required></label>
-              <label class="field"><span>Código</span><input id="barcodeInput" required placeholder="6-14 dígitos"></label>
-              <label class="field"><span>SKU</span><input id="skuInput" placeholder="Opcional"></label>
-              <label class="field"><span>Categoria</span><input id="categoryInput" required></label>
-              <label class="field"><span>Preço</span><input id="priceInput" type="number" min="0" step="0.01" required></label>
-              <label class="field"><span>Estoque</span><input id="stockInput" type="number" min="0" step="1" required></label>
-              <button class="primary-btn" type="submit">Salvar produto</button>
-            </form>
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr><th>Produto</th><th>Código</th><th>Categoria</th><th>Preço</th><th>Estoque</th><th></th></tr>
-                </thead>
-                <tbody id="productsTable"></tbody>
-              </table>
-            </div>
-          </section>
-        </section>
-
-        <section class="view" id="salesView">
-          <section class="panel">
-            <div class="panel-heading">
-              <div>
-                <span>Histórico</span>
-                <h2>Vendas finalizadas</h2>
-              </div>
-              <div class="sales-controls">
-                <select id="salesDateFilter" class="sort-select">
-                  <option value="all">Todas as vendas</option>
-                  <option value="today">Hoje</option>
-                  <option value="week">Últimos 7 dias</option>
-                  <option value="month">Últimos 30 dias</option>
-                </select>
-                <button class="ghost-btn small" id="exportSalesBtn" type="button">Exportar CSV</button>
-              </div>
-            </div>
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr><th>Número</th><th>Data</th><th>Itens</th><th>Pagamento</th><th>Total</th><th></th></tr>
-                </thead>
-                <tbody id="salesTable"></tbody>
-              </table>
-            </div>
-          </section>
-        </section>
-
-        <section class="view" id="reportsView">
-          <div class="report-grid">
-            <section class="metric">
-              <span>Vendas hoje</span>
-              <strong id="todaySales">0</strong>
-            </section>
-            <section class="metric">
-              <span>Faturamento hoje</span>
-              <strong id="todayRevenue">R$ 0,00</strong>
-            </section>
-            <section class="metric">
-              <span>Ticket médio</span>
-              <strong id="avgTicket">R$ 0,00</strong>
-            </section>
-            <section class="metric">
-              <span>Itens vendidos hoje</span>
-              <strong id="itemsSold">0</strong>
-            </section>
-            <section class="metric">
-              <span>Faturamento total</span>
-              <strong id="totalRevenue">R$ 0,00</strong>
-            </section>
-            <section class="metric">
-              <span>Itens vendidos total</span>
-              <strong id="totalItems">0</strong>
-            </section>
-            <section class="metric">
-              <span>Duração sessão</span>
-              <strong id="sessionDuration">0h 0m</strong>
-            </section>
+        <!-- Painel de Totais -->
+        <div class="totals-panel">
+          <div class="total-line">
+            <span>SUBTOTAL</span>
+            <strong id="displaySubtotal">R$ 0,00</strong>
           </div>
-          <section class="panel">
-            <div class="panel-heading"><div><span>Operação</span><h2>Produtos com baixo estoque</h2></div></div>
-            <div class="stock-alerts" id="stockAlerts"></div>
-          </section>
-        </section>
-
-        <section class="view" id="settingsView">
-          <section class="panel settings-panel">
-            <div class="panel-heading"><div><span>Preferências</span><h2>Dados do caixa</h2></div></div>
-            <label class="field"><span>Nome do mercado</span><input id="storeNameInput"></label>
-            <label class="field"><span>Operador</span><input id="operatorInput"></label>
-            <label class="field"><span>CNPJ / documento</span><input id="documentInput"></label>
-            <label class="field"><span>Taxa de entrega (%)</span><input id="takeoutTaxInput" type="number" min="0" step="0.01"></label>
-            <button class="primary-btn" id="saveSettingsBtn" type="button">Salvar configurações</button>
-            <div class="shortcuts-help">
-              <h3>Atalhos de teclado:</h3>
-              <ul>
-                <li><kbd>Ctrl+1</kbd> - Caixa</li>
-                <li><kbd>Ctrl+2</kbd> - Produtos</li>
-                <li><kbd>Ctrl+3</kbd> - Vendas</li>
-                <li><kbd>Ctrl+4</kbd> - Resumo</li>
-                <li><kbd>Ctrl+5</kbd> - Configurações</li>
-                <li><kbd>F2</kbd> - Focar busca de produtos</li>
-                <li><kbd>F4</kbd> - Abrir tela de pagamento</li>
-                <li><kbd>Esc</kbd> - Fechar diálogos</li>
-              </ul>
-            </div>
-          </section>
-        </section>
-      </main>
-    </div>
-
-    <dialog id="paymentDialog">
-      <form method="dialog" class="modal">
-        <div class="modal-heading">
-          <div>
-            <span>Recebimento</span>
-            <h2>Finalizar venda</h2>
+          <div class="total-line">
+            <span>DESCONTO</span>
+            <input type="number" id="discountDisplayInput" min="0" step="0.01" value="0" class="input-total">
+            <span id="displayDiscount">R$ 0,00</span>
           </div>
-          <button class="icon-btn" value="cancel" type="submit">×</button>
-        </div>
-        <div class="payment-total">
-          <span>Total da venda</span>
-          <strong id="paymentTotal">R$ 0,00</strong>
-        </div>
-        <div class="payment-grid">
-          <label class="field"><span>Dinheiro</span><input id="cashInput" type="number" min="0" step="0.01" value="0"></label>
-          <label class="field"><span>Pix</span><input id="pixInput" type="number" min="0" step="0.01" value="0"></label>
-          <label class="field"><span>Cartão</span><input id="cardInput" type="number" min="0" step="0.01" value="0"></label>
-        </div>
-        <div class="total-row"><span>Recebido</span><strong id="paidValue">R$ 0,00</strong></div>
-        <div class="total-row"><span>Troco</span><strong id="changeValue">R$ 0,00</strong></div>
-        <menu class="modal-actions">
-          <button class="ghost-btn" value="cancel">Cancelar</button>
-          <button class="primary-btn" id="finishSaleBtn" type="button">Finalizar e imprimir</button>
-        </menu>
-      </form>
-    </dialog>
-
-    <dialog id="receiptDialog">
-      <div class="modal receipt-modal">
-        <div class="modal-heading">
-          <div>
-            <span>Comprovante</span>
-            <h2>Venda concluída</h2>
+          <div class="total-line">
+            <span>ACRÉSCIMO</span>
+            <input type="number" id="surchargeDisplayInput" min="0" step="0.01" value="0" class="input-total">
+            <span id="displaySurcharge">R$ 0,00</span>
           </div>
-          <button class="icon-btn" id="closeReceiptBtn" type="button">×</button>
+          <div class="total-line highlight">
+            <span>TOTAL</span>
+            <strong id="displayTotal">R$ 0,00</strong>
+          </div>
         </div>
-        <pre id="receiptText"></pre>
-        <div class="modal-actions">
-          <button class="ghost-btn" id="copyReceiptBtn" type="button">Copiar</button>
-          <button class="primary-btn" id="printReceiptBtn" type="button">Imprimir</button>
+
+        <!-- Botões de Ação -->
+        <div class="action-buttons">
+          <button type="button" class="btn-action btn-new" id="newSaleDisplayBtn">F1 NOVA</button>
+          <button type="button" class="btn-action btn-remove" id="removeLastBtn">F2 REMOVE</button>
+          <button type="button" class="btn-action btn-config" id="configDisplayBtn">F3 CONFIG</button>
+          <button type="button" class="btn-action btn-checkout" id="checkoutDisplayBtn">F4 PAGAR</button>
         </div>
       </div>
-    </dialog>
 
-    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+      <!-- Tela de Produtos -->
+      <div class="pdv-screen" id="productsScreen">
+        <div class="screen-header">
+          <h2>GERENCIAR PRODUTOS</h2>
+          <button type="button" class="close-btn" id="closeProductsScreen">✕</button>
+        </div>
+        
+        <div class="form-section">
+          <form id="productForm" class="product-form">
+            <input type="hidden" id="productId">
+            <div class="form-row">
+              <input type="text" id="nameInput" placeholder="NOME DO PRODUTO" required>
+              <input type="text" id="barcodeInputForm" placeholder="CÓDIGO (6-14 dígitos)" required>
+            </div>
+            <div class="form-row">
+              <input type="text" id="skuInputForm" placeholder="SKU (opcional)">
+              <input type="text" id="categoryInputForm" placeholder="CATEGORIA" required>
+            </div>
+            <div class="form-row">
+              <input type="number" id="priceInputForm" placeholder="PREÇO" min="0.01" step="0.01" required>
+              <input type="number" id="stockInputForm" placeholder="ESTOQUE" min="0" step="1" required>
+            </div>
+            <div class="form-row">
+              <button type="submit" class="btn-primary">SALVAR</button>
+              <button type="button" class="btn-secondary" id="clearFormBtn">LIMPAR</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="products-list-section">
+          <div class="products-controls">
+            <input type="text" id="productSearchInput" placeholder="BUSCAR PRODUTO..." class="search-input">
+            <select id="productSortSelect" class="sort-select">
+              <option value="name">NOME</option>
+              <option value="price">PREÇO</option>
+              <option value="stock">ESTOQUE</option>
+              <option value="category">CATEGORIA</option>
+            </select>
+            <button type="button" id="exportProductsBtn" class="btn-secondary">EXPORTAR CSV</button>
+          </div>
+          <table class="products-table">
+            <thead>
+              <tr>
+                <th>PRODUTO</th>
+                <th>CÓDIGO</th>
+                <th>SKU</th>
+                <th>PREÇO</th>
+                <th>ESTOQUE</th>
+                <th>AÇÕES</th>
+              </tr>
+            </thead>
+            <tbody id="productsTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tela de Vendas/Histórico -->
+      <div class="pdv-screen" id="salesHistoryScreen">
+        <div class="screen-header">
+          <h2>HISTÓRICO DE VENDAS</h2>
+          <button type="button" class="close-btn" id="closeSalesScreen">✕</button>
+        </div>
+
+        <div class="sales-controls">
+          <select id="salesFilterSelect" class="sort-select">
+            <option value="all">TODAS</option>
+            <option value="today">HOJE</option>
+            <option value="week">7 DIAS</option>
+            <option value="month">30 DIAS</option>
+          </select>
+          <input type="text" id="salesSearchInput" placeholder="BUSCAR VENDA..." class="search-input">
+          <button type="button" id="exportSalesBtn" class="btn-secondary">EXPORTAR CSV</button>
+        </div>
+
+        <table class="sales-table">
+          <thead>
+            <tr>
+              <th>VENDA</th>
+              <th>DATA/HORA</th>
+              <th>ITENS</th>
+              <th>PAGAMENTO</th>
+              <th>TOTAL</th>
+              <th>AÇÕES</th>
+            </tr>
+          </thead>
+          <tbody id="salesTable"></tbody>
+        </table>
+      </div>
+
+      <!-- Tela de Relatórios -->
+      <div class="pdv-screen" id="reportsScreen">
+        <div class="screen-header">
+          <h2>RELATÓRIOS</h2>
+          <button type="button" class="close-btn" id="closeReportsScreen">✕</button>
+        </div>
+
+        <div class="reports-grid">
+          <div class="report-card">
+            <span class="report-label">VENDAS HOJE</span>
+            <strong class="report-value" id="reportTodaySales">0</strong>
+          </div>
+          <div class="report-card">
+            <span class="report-label">FATURAMENTO HOJE</span>
+            <strong class="report-value" id="reportTodayRevenue">R$ 0,00</strong>
+          </div>
+          <div class="report-card">
+            <span class="report-label">TICKET MÉDIO</span>
+            <strong class="report-value" id="reportAvgTicket">R$ 0,00</strong>
+          </div>
+          <div class="report-card">
+            <span class="report-label">ITENS HOJE</span>
+            <strong class="report-value" id="reportItemsToday">0</strong>
+          </div>
+          <div class="report-card">
+            <span class="report-label">FATURAMENTO TOTAL</span>
+            <strong class="report-value" id="reportTotalRevenue">R$ 0,00</strong>
+          </div>
+          <div class="report-card">
+            <span class="report-label">ITENS VENDIDOS</span>
+            <strong class="report-value" id="reportTotalItems">0</strong>
+          </div>
+          <div class="report-card">
+            <span class="report-label">DURAÇÃO SESSÃO</span>
+            <strong class="report-value" id="reportSessionDuration">0h 0m</strong>
+          </div>
+          <div class="report-card">
+            <span class="report-label">PRODUTOS CADASTRO</span>
+            <strong class="report-value" id="reportTotalProducts">0</strong>
+          </div>
+        </div>
+
+        <div class="alerts-section">
+          <h3>⚠ BAIXO ESTOQUE</h3>
+          <div class="alerts-list" id="stockAlertsList"></div>
+        </div>
+      </div>
+
+      <!-- Tela de Configurações -->
+      <div class="pdv-screen" id="settingsScreen">
+        <div class="screen-header">
+          <h2>CONFIGURAÇÕES</h2>
+          <button type="button" class="close-btn" id="closeSettingsScreen">✕</button>
+        </div>
+
+        <form id="settingsForm" class="settings-form">
+          <div class="form-group">
+            <label>NOME DO ESTABELECIMENTO</label>
+            <input type="text" id="storeNameInput" required>
+          </div>
+          <div class="form-group">
+            <label>OPERADOR / CAIXA</label>
+            <input type="text" id="operatorInput" required>
+          </div>
+          <div class="form-group">
+            <label>CNPJ / CPF</label>
+            <input type="text" id="documentInput" required>
+          </div>
+          <div class="form-group">
+            <label>TAXA DE ENTREGA (%)</label>
+            <input type="number" id="takeoutTaxInput" min="0" step="0.01">
+          </div>
+          <button type="submit" class="btn-primary">SALVAR CONFIGURAÇÕES</button>
+        </form>
+
+        <div class="shortcuts-section">
+          <h3>ATALHOS DE TECLADO</h3>
+          <ul class="shortcuts-list">
+            <li><kbd>F1</kbd> - Nova Venda</li>
+            <li><kbd>F2</kbd> - Remove Último Item</li>
+            <li><kbd>F3</kbd> - Configurações</li>
+            <li><kbd>F4</kbd> - Finalizar Pagamento</li>
+            <li><kbd>Ctrl+P</kbd> - Abrir Produtos</li>
+            <li><kbd>Ctrl+V</kbd> - Abrir Vendas</li>
+            <li><kbd>Ctrl+R</kbd> - Abrir Relatórios</li>
+            <li><kbd>Ctrl+Z</kbd> - Voltar para Caixa</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Tela de Pagamento -->
+      <div class="pdv-screen" id="paymentScreen">
+        <div class="screen-header">
+          <h2>FINALIZAR VENDA</h2>
+          <button type="button" class="close-btn" id="closePaymentScreen">✕</button>
+        </div>
+
+        <div class="payment-summary">
+          <div class="payment-line">
+            <span>SUBTOTAL</span>
+            <strong id="paymentSubtotal">R$ 0,00</strong>
+          </div>
+          <div class="payment-line">
+            <span>DESCONTO</span>
+            <strong id="paymentDiscount">R$ 0,00</strong>
+          </div>
+          <div class="payment-line">
+            <span>ACRÉSCIMO</span>
+            <strong id="paymentSurcharge">R$ 0,00</strong>
+          </div>
+          <div class="payment-line highlight">
+            <span>TOTAL</span>
+            <strong id="paymentTotal">R$ 0,00</strong>
+          </div>
+        </div>
+
+        <div class="payment-methods">
+          <div class="payment-input">
+            <label>DINHEIRO (R$)</label>
+            <input type="number" id="cashPaymentInput" min="0" step="0.01" value="0" placeholder="0,00">
+          </div>
+          <div class="payment-input">
+            <label>PIX (R$)</label>
+            <input type="number" id="pixPaymentInput" min="0" step="0.01" value="0" placeholder="0,00">
+          </div>
+          <div class="payment-input">
+            <label>CARTÃO (R$)</label>
+            <input type="number" id="cardPaymentInput" min="0" step="0.01" value="0" placeholder="0,00">
+          </div>
+        </div>
+
+        <div class="payment-result">
+          <div class="result-line">
+            <span>RECEBIDO</span>
+            <strong id="paymentReceived">R$ 0,00</strong>
+          </div>
+          <div class="result-line">
+            <span>TROCO</span>
+            <strong id="paymentChange">R$ 0,00</strong>
+          </div>
+        </div>
+
+        <div class="payment-actions">
+          <button type="button" class="btn-cancel" id="cancelPaymentBtn">CANCELAR</button>
+          <button type="button" class="btn-success" id="confirmPaymentBtn">CONFIRMAR PAGAMENTO</button>
+        </div>
+      </div>
+
+      <!-- Tela de Recibo -->
+      <div class="pdv-screen" id="receiptScreen">
+        <div class="screen-header">
+          <h2>RECIBO</h2>
+          <button type="button" class="close-btn" id="closeReceiptScreen">✕</button>
+        </div>
+
+        <div class="receipt-container">
+          <pre id="receiptContent"></pre>
+        </div>
+
+        <div class="receipt-actions">
+          <button type="button" class="btn-secondary" id="copyReceiptBtn">COPIAR</button>
+          <button type="button" class="btn-secondary" id="printReceiptBtn">IMPRIMIR</button>
+          <button type="button" class="btn-primary" id="newSaleFromReceiptBtn">NOVA VENDA</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notificações -->
+    <div class="toast" id="toast"></div>
+
     <script src="app.js"></script>
   </body>
 </html>
